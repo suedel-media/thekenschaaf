@@ -1,0 +1,38 @@
+---
+import Seite from '../layouts/Seite.astro';
+const faq = [
+  ['Wie viele Brauhäuser passen an einen Abend?', 'Das hängt von der Gruppe ab. Als Tipp: Plane eher wenige Stopps und lass dir Zeit, dann wird es entspannter als bei einem straffen Marsch. Kurze Wege in der Altstadt helfen dabei.'],
+  ['Muss ich reservieren?', 'Für größere Gruppen lohnt sich vorab ein Anruf im Brauhaus, vor allem an Wochenenden. Kontaktdaten und Öffnungszeiten findest du pro Haus in der Liste, sobald sie geprüft sind.'],
+  ['Wie komme ich von Stopp zu Stopp?', 'Mit dem Button „Route in Google Maps“ öffnest du deine Tour als Fußweg in der Karten-App deines Handys.'],
+  ['Kostet die Seite etwas?', 'Nein, thekenschaaf.de ist kostenlos und ohne Anmeldung nutzbar.']
+];
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
+---
+<Seite title="Brauhaus-Tour in Köln planen: für Gruppen, Männerabende und Besucher" description="Für wen thekenschaaf gedacht ist: Männerabend, Junggesellenabschied, Kollegenrunde oder Köln-Besuch. So planst du deine Kölsch-Tour durch die Brauhäuser." path="/fuer-wen/">
+  <h1>Brauhaus-Tour in Köln planen: für wen thekenschaaf gedacht ist</h1>
+  <p>Ein guter Brauhaus-Abend läuft besser mit Plan. thekenschaaf ist für alle, die gern mit Freunden, Kollegen oder Familie durch die Kölner Brauhäuser ziehen und nicht vor jedem Stopp diskutieren wollen, wohin es als Nächstes geht.</p>
+
+  <h2>Für Gruppen und Männerabende</h2>
+  <p>Einer plant die Tour, alle folgen der Route. Keine Diskussion an der Straßenecke.</p>
+  <h2>Für Junggesellenabschiede und Feiern</h2>
+  <p>Kurze Wege in der Altstadt und eine feste Reihenfolge sparen Zeit und Nerven.</p>
+  <h2>Für Kollegenrunden und Firmenabende</h2>
+  <p>Ein Brauhaus-Abend passt fast immer. Mit einer Tour weiß jeder vorher, was kommt.</p>
+  <h2>Für Besucher und Städtereisende</h2>
+  <p>Du kennst Köln nicht gut und willst trotzdem die typischen Häuser sehen? Die Karte zeigt dir, was nah beieinander liegt.</p>
+  <h2>Für Kölner, die Neues entdecken wollen</h2>
+  <p>Auch wer die Stadt kennt, findet Häuser, die er schon lange mal ausprobieren wollte.</p>
+
+  <h2>So geht’s</h2>
+  <ol>
+    <li>Brauhäuser auf der Karte antippen und zur Tour hinzufügen</li>
+    <li>Reihenfolge ändern, bis sie passt</li>
+    <li>Route in Google Maps öffnen und los</li>
+  </ol>
+  <p><a class="btn pri" href="/">Tour planen</a></p>
+
+  <h2>Häufige Fragen</h2>
+  {faq.map(([q, a]) => (<><h3>{q}</h3><p>{a}</p></>))}
+  <p class="hint">Bitte trinke verantwortungsvoll und komm sicher nach Hause.</p>
+  <script type="application/ld+json" is:inline set:html={ld}></script>
+</Seite>

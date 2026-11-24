@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { TILES, CENTER } from '../config.js';
+import { STYLE, CENTER } from '../config.js';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -25,7 +25,7 @@ $('#no').onclick = () => {
 // Karte
 const map = new maplibregl.Map({
   container: 'map',
-  style: { version: 8, sources: { b: { type: 'raster', tiles: [TILES.url], tileSize: 256, attribution: TILES.attribution } }, layers: [{ id: 'b', type: 'raster', source: 'b' }] },
+  style: STYLE,
   center: CENTER, zoom: 14, attributionControl: { compact: true }
 });
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
@@ -58,7 +58,7 @@ else console.warn('Keine Koordinaten vorhanden. Bitte "npm run geocode" ausführ
 
 map.on('load', () => {
   map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
-  map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#ff4d6d', 'line-width': 4, 'line-dasharray': [2, 1.5] } });
+  map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#e2001a', 'line-width': 4, 'line-dasharray': [2, 1.5] } });
   render();
 });
 
@@ -92,6 +92,27 @@ function clink(a, b) {
   setTimeout(() => m.remove(), 1300);
 }
 
+// Strichliste auf dem Deckel: ein Strich pro Stopp, der fünfte liegt quer
+const tallies = $$('.tally');
+let lastN = 0;
+function drawTally(n) {
+  const grew = n > lastN;
+  lastN = n;
+  const NS = 'http://www.w3.org/2000/svg';
+  tallies.forEach(g => {
+    g.innerHTML = '';
+    for (let i = 0; i < n && i < 30; i++) {
+      const b = Math.floor(i / 5), k = i % 5, row = Math.floor(b / 3), col = b % 3;
+      const x0 = 45 + col * 38, y0 = 122 + row * 28;
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', k < 4 ? `M${x0 + k * 7} ${y0 + (k % 2)} l${k % 2 ? -1 : 1} 22` : `M${x0 - 5} ${y0 + 18} L${x0 + 27} ${y0 + 4}`);
+      p.setAttribute('class', 'strich' + (grew && i === n - 1 ? ' neu' : ''));
+      g.appendChild(p);
+    }
+  });
+  $('#deckel').setAttribute('aria-label', 'Bierdeckel mit ' + n + (n === 1 ? ' Strich' : ' Strichen'));
+}
+
 const enc = encodeURIComponent;
 const q = id => by[id].name + ', ' + by[id].adresse + ', Köln';
 
@@ -113,6 +134,7 @@ function render() {
   try { src = map.getSource('route'); } catch {}
   if (src) src.setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: tour.map(id => by[id]).filter(h => h.lat != null).map(h => [h.lng, h.lat]) } });
   $('#cnt').textContent = tour.length + (tour.length === 1 ? ' Stopp' : ' Stopps');
+  drawTally(tour.length);
   const links = [$('#go'), $('#go2')];
   if (tour.length > 1) {
     const s = tour.map(q);

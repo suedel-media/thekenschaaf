@@ -1,0 +1,31 @@
+---
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+const { title, description, path = '/' } = Astro.props;
+const url = 'https://thekenschaaf.de' + path;
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={url}>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={url}>
+</head>
+<body>
+  <header class="hero slim"><div class="in"><a class="back" href="/">thekenschaaf<span>.</span></a></div></header>
+  <main class="wrap">
+    <article class="prose"><slot /></article>
+    <footer>
+      <p>Bitte trinke verantwortungsvoll. Infos und Öffnungszeiten ohne Gewähr.</p>
+      <p><a href="/ueber/">Über thekenschaaf</a> · <a href="/fuer-wen/">Für wen?</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
+      <p class="pw">powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
+    </footer>
+  </main>
+</body>
+</html>

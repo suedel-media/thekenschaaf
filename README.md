@@ -9,7 +9,7 @@ Astro-Projekt für die Brauhaus-Tour-Karte (thekenschaaf.de).
 5. `npm run build` erzeugt den Ordner `dist` für den Upload (z. B. all-inkl)
 
 ## Offen vor dem Livegang
-- Kartenkacheln: `src/config.js` (jetzt nur Entwicklung, Lizenz für Livebetrieb klären)
+- Karte: OpenFreeMap (`src/config.js`), in der Datenschutzerklärung nennen (IP-Übertragung)
 - Impressum und Datenschutz ausfüllen
 - Brauhaus-Daten prüfen (Adresse, offen?, Öffnungszeiten), `src/data/brauhaeuser.json`
 - Brauhaus Bielstein ergänzen

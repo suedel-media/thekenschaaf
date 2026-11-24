@@ -9,7 +9,11 @@ import data from '../data/brauhaeuser.json';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Thekenschaaf – Brauhaus-Tour in Köln planen</title>
-  <meta name="description" content="Plane deine Brauhaus-Tour durch Köln: Brauhäuser auf der Karte auswählen, Reihenfolge festlegen und die Route mit aufs Handy nehmen.">
+  <link rel="canonical" href="https://thekenschaaf.de/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Thekenschaaf – Brauhaus-Tour in Köln planen">
+  <meta property="og:url" content="https://thekenschaaf.de/">
+  <meta name="description" content="Brauhaus-Tour in Köln planen: Brauhäuser auf der Karte auswählen, Reihenfolge festlegen, Route aufs Handy mitnehmen.">
 </head>
 <body>
   <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gt">
@@ -20,9 +24,12 @@ import data from '../data/brauhaeuser.json';
     </div>
   </div>
 
-  <main class="wrap">
-    <h1>Thekenschaaf</h1>
+  <header class="hero"><div class="in">
+    <p class="tag">kölsch · tour · planer</p>
+    <h1>thekenschaaf<span>.</span></h1>
     <p class="lead">Such dir Brauhäuser aus, sortier die Reihenfolge und nimm die Route mit aufs Handy. Wer zuerst plant, trinkt später entspannter.</p>
+  </div></header>
+  <main class="wrap">
     <div class="filters" role="group" aria-label="Filter">
       <button data-f="all" class="on">Alle</button>
       <button data-f="b">Brauhäuser</button>
@@ -32,6 +39,14 @@ import data from '../data/brauhaeuser.json';
       <div id="map" aria-label="Karte der Brauhäuser"></div>
       <div class="panel">
         <section class="tour" aria-live="polite">
+          <svg id="deckel" class="deckel" viewBox="0 0 200 200" role="img" aria-label="Bierdeckel ohne Striche">
+            <circle cx="100" cy="100" r="96" fill="#e9dcc0" stroke="#111" stroke-width="3"/>
+            <circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="2"/>
+            <text x="100" y="62" text-anchor="middle" class="d1">kölsches</text>
+            <text x="100" y="86" text-anchor="middle" class="d2">navigationssystem</text>
+            <text x="100" y="106" text-anchor="middle" class="d3">thekenschaaf.</text>
+            <g class="tally"></g>
+          </svg>
           <h2>Deine Tour</h2>
           <p class="empty" id="empty">Tippe auf ein Glas auf der Karte oder auf „Zur Tour hinzufügen“.</p>
           <ol id="tl"></ol>
@@ -53,15 +68,17 @@ import data from '../data/brauhaeuser.json';
             </details>
           ))}
         </div>
+        <p class="intro">Köln hat viele Brauhäuser, und jedes hat sein eigenes Kölsch. thekenschaaf zeigt dir die bekannten Häuser auf einer Karte, mit Infos, Adresse und Öffnungszeiten. Du stellst deine Tour zusammen, siehst die Stopps auf dem Bierdeckel und öffnest die Route als Fußweg in deiner Karten-App.</p>
         <footer>
           <p>Bitte trinke verantwortungsvoll. Infos und Öffnungszeiten ohne Gewähr.</p>
-          <p><a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></p>
+          <p><a href="/ueber/">Über thekenschaaf</a> · <a href="/fuer-wen/">Für wen?</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
+          <p class="pw">powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
         </footer>
       </div>
     </div>
   </main>
 
-  <div class="bar"><span id="cnt">0 Stopps</span><a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a></div>
+  <div class="bar"><div class="mini"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#e9dcc0" stroke="#fff" stroke-width="5"/><circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="3"/><g class="tally"></g></svg><span id="cnt">0 Stopps</span></div><a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a></div>
 
   <script id="data" type="application/json" is:inline set:html={JSON.stringify(data)}></script>
   <script>import '../scripts/app.js';</script>

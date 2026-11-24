@@ -1,8 +1,6 @@
-// ACHTUNG: Diese Carto-Kacheln sind nur für die Entwicklung gedacht.
-// Vor dem Livegang (vor allem mit Anzeigen) einen Anbieter mit passender Lizenz
-// oder eigene Kacheln (z. B. Protomaps) eintragen. Attribution beibehalten.
-export const TILES = {
-  url: 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-  attribution: '© OpenStreetMap-Mitwirkende © CARTO'
-};
+// Kartenstil von OpenFreeMap: kostenlos, ohne API-Key, ohne Cookies.
+// Alternativen: .../styles/liberty (bunter) oder .../styles/bright
+// Hinweis für die Datenschutzerklärung: Beim Laden der Karte wird die IP-Adresse
+// an den Kartenserver übertragen. Später ggf. selbst hosten.
+export const STYLE = 'https://tiles.openfreemap.org/styles/positron';
 export const CENTER = [6.9603, 50.9375];
