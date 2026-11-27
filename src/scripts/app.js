@@ -31,6 +31,14 @@ $$('.reveal').forEach(el => (io ? io.observe(el) : el.classList.add('in')));
 // Karte
 const map = new maplibregl.Map({ container: 'map', style: STYLE, center: CENTER, zoom: 13.5, attributionControl: { compact: true } });
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+map.on('error', e => {
+  const m = (e && e.error && e.error.message) || String(e);
+  console.warn('Kartenfehler:', m);
+  if (/Expected value to be of type number/.test(m)) return;
+  const el = $('#maperr');
+  el.hidden = false;
+  el.textContent = 'Kartenhinweis: ' + m.slice(0, 160);
+});
 
 const GLASS = '<svg viewBox="-12 -30 24 42" width="28" height="48"><path class="beer" d="M-8-22h16l-1.5 30q0 3-3 3h-7q-3 0-3-3z"/><rect class="foam" x="-9" y="-27" width="18" height="8" rx="4"/></svg>';
 const popup = new maplibregl.Popup({ offset: [0, -52], closeButton: false, maxWidth: '240px' });
