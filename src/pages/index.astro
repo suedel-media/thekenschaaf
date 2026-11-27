@@ -1,6 +1,8 @@
 ---
 import '@fontsource-variable/manrope';
 import '../styles/global.css';
+import Bg from '../components/Bg.astro';
+import Logo from '../components/Logo.astro';
 import data from '../data/brauhaeuser.json';
 ---
 <!doctype html>
@@ -9,13 +11,15 @@ import data from '../data/brauhaeuser.json';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Thekenschaaf – Brauhaus-Tour in Köln planen</title>
+  <meta name="description" content="Brauhaus-Tour in Köln planen: Brauhäuser auf der Karte auswählen, Reihenfolge festlegen, Route aufs Handy mitnehmen.">
   <link rel="canonical" href="https://thekenschaaf.de/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Thekenschaaf – Brauhaus-Tour in Köln planen">
   <meta property="og:url" content="https://thekenschaaf.de/">
-  <meta name="description" content="Brauhaus-Tour in Köln planen: Brauhäuser auf der Karte auswählen, Reihenfolge festlegen, Route aufs Handy mitnehmen.">
 </head>
 <body>
+  <Bg />
   <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gt">
     <div>
       <h2 id="gt">Bist du schon 18?</h2>
@@ -24,61 +28,84 @@ import data from '../data/brauhaeuser.json';
     </div>
   </div>
 
-  <header class="hero"><div class="in">
-    <p class="tag">kölsch · tour · planer</p>
-    <h1>thekenschaaf<span>.</span></h1>
-    <p class="lead">Such dir Brauhäuser aus, sortier die Reihenfolge und nimm die Route mit aufs Handy. Wer zuerst plant, trinkt später entspannter.</p>
-  </div></header>
-  <main class="wrap">
-    <div class="filters" role="group" aria-label="Filter">
+  <header class="top"><a class="brand" href="/"><Logo />thekenschaaf<span>.</span></a><nav><a href="#karte">Karte</a><a href="/ueber/">Über</a><a href="/fuer-wen/">Für wen?</a></nav></header>
+
+  <section class="hero">
+    <div class="heroin">
+      <p class="eyebrow">thekenschaaf.</p>
+      <h1>Dein kölsches Navigationssystem.</h1>
+      <p class="sub">Such dir Brauhäuser aus, bring sie in Reihenfolge und nimm die Route mit aufs Handy. Wer zuerst plant, trinkt später entspannter.</p>
+      <a class="btn pri big" href="#karte">Tour planen</a>
+    </div>
+  </section>
+
+  <section class="steps">
+    <div class="step reveal"><b class="num">01</b><h3>Häuser aussuchen</h3><p>Tippe auf ein Kölschglas auf der Karte oder drück in der Liste auf das Plus.</p></div>
+    <div class="step reveal" style="transition-delay:.12s"><b class="num">02</b><h3>Reihenfolge festlegen</h3><p>Schieb die Stopps hoch oder runter, bis der Abend Sinn ergibt. Der Bierdeckel zählt mit.</p></div>
+    <div class="step reveal" style="transition-delay:.24s"><b class="num">03</b><h3>Losgehen</h3><p>Öffne die Route in Google Maps und folge dem Fußweg von Stopp zu Stopp.</p></div>
+  </section>
+
+  <section id="karte" class="mapfull">
+    <div class="chips" role="group" aria-label="Filter">
       <button data-f="all" class="on">Alle</button>
       <button data-f="b">Brauhäuser</button>
       <button data-f="k">Kölsch-Kneipen</button>
     </div>
-    <div class="grid">
-      <div id="map" aria-label="Karte der Brauhäuser"></div>
-      <div class="panel">
-        <section class="tour" aria-live="polite">
-          <svg id="deckel" class="deckel" viewBox="0 0 200 200" role="img" aria-label="Bierdeckel ohne Striche">
-            <circle cx="100" cy="100" r="96" fill="#e9dcc0" stroke="#111" stroke-width="3"/>
-            <circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="2"/>
-            <text x="100" y="62" text-anchor="middle" class="d1">kölsches</text>
-            <text x="100" y="86" text-anchor="middle" class="d2">navigationssystem</text>
-            <text x="100" y="106" text-anchor="middle" class="d3">thekenschaaf.</text>
-            <g class="tally"></g>
-          </svg>
-          <h2>Deine Tour</h2>
-          <p class="empty" id="empty">Tippe auf ein Glas auf der Karte oder auf „Zur Tour hinzufügen“.</p>
-          <ol id="tl"></ol>
-          <div class="row">
-            <a class="btn pri" id="go" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a>
-            <button id="cheers">Anstoßen</button>
-            <button id="clear">Tour leeren</button>
-          </div>
-        </section>
-        <h2>Brauhäuser</h2>
-        <div class="all">
-          {data.map(h => (
-            <details class="item" data-id={h.id} data-kat={h.kat}>
-              <summary><b>{h.name}</b>{h.marke && <em>{h.marke}</em>}</summary>
+    <div id="map" aria-label="Karte der Brauhäuser"></div>
+  </section>
+
+  <section class="work wrap">
+    <aside class="tourcard" aria-live="polite">
+      <svg id="deckel" class="deckel" viewBox="0 0 200 200" role="img" aria-label="Bierdeckel ohne Striche">
+        <circle cx="100" cy="100" r="96" fill="#e9dcc0" stroke="#8a7a55" stroke-width="3"/>
+        <circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="2"/>
+        <text x="100" y="62" text-anchor="middle" class="d1">kölsches</text>
+        <text x="100" y="86" text-anchor="middle" class="d2">navigationssystem</text>
+        <text x="100" y="106" text-anchor="middle" class="d3">thekenschaaf.</text>
+        <g class="tally"></g>
+      </svg>
+      <h2>Deine Tour</h2>
+      <p class="empty" id="empty">Tippe auf ein Glas auf der Karte oder in der Liste auf das Plus.</p>
+      <ol id="tl"></ol>
+      <div class="row">
+        <a class="btn pri" id="go" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a>
+        <button id="cheers">Anstoßen</button>
+        <button id="clear">Tour leeren</button>
+      </div>
+    </aside>
+    <div class="listcol">
+      <h2>Alle Häuser</h2>
+      <p class="hint">Mit dem Plus kommt ein Haus sofort in deine Tour. Mit dem Pfeil klappst du die Infos auf.</p>
+      <div class="all">
+        {data.map(h => (
+          <div class="item" data-id={h.id} data-kat={h.kat}>
+            <div class="row1">
+              <button class="plus" data-add={h.id} aria-label={`Zur Tour hinzufügen: ${h.name}`}>+</button>
+              <button class="expand" aria-expanded="false"><span>{h.name}</span>{h.marke && <em>{h.marke}</em>}</button>
+            </div>
+            <div class="det" hidden>
               <p>{h.info}</p>
-              <p class="meta">{h.adresse}, Köln<br>{h.zeiten ?? 'Öffnungszeiten werden noch geprüft.'}</p>
-              {h.web && <a href={h.web} rel="noopener" target="_blank">Website</a>}
-              <button class="add" data-add={h.id}>Zur Tour hinzufügen</button>
-            </details>
-          ))}
-        </div>
-        <p class="intro">Köln hat viele Brauhäuser, und jedes hat sein eigenes Kölsch. thekenschaaf zeigt dir die bekannten Häuser auf einer Karte, mit Infos, Adresse und Öffnungszeiten. Du stellst deine Tour zusammen, siehst die Stopps auf dem Bierdeckel und öffnest die Route als Fußweg in deiner Karten-App.</p>
-        <footer>
-          <p>Bitte trinke verantwortungsvoll. Infos und Öffnungszeiten ohne Gewähr.</p>
-          <p><a href="/ueber/">Über thekenschaaf</a> · <a href="/fuer-wen/">Für wen?</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
-          <p class="pw">powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
-        </footer>
+              <p>{h.adresse}, Köln<br>{h.zeiten ?? 'Öffnungszeiten werden noch geprüft.'}</p>
+              {h.web && <p><a href={h.web} rel="noopener" target="_blank">Website</a></p>}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  </main>
+  </section>
 
-  <div class="bar"><div class="mini"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#e9dcc0" stroke="#fff" stroke-width="5"/><circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="3"/><g class="tally"></g></svg><span id="cnt">0 Stopps</span></div><a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a></div>
+  <footer class="foot wrap">
+    <p class="intro">Köln hat viele Brauhäuser, und jedes hat sein eigenes Kölsch. thekenschaaf zeigt dir die bekannten Häuser auf einer Karte, mit Infos, Adresse und Öffnungszeiten. Du stellst deine Tour zusammen, siehst die Stopps auf dem Bierdeckel und öffnest die Route als Fußweg in deiner Karten-App.</p>
+    <p>Bitte trinke verantwortungsvoll. Infos und Öffnungszeiten ohne Gewähr.</p>
+    <p><a href="/ueber/">Über thekenschaaf</a> · <a href="/fuer-wen/">Für wen?</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
+    <p>powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
+  </footer>
+
+  <div class="bar" id="bar" hidden>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#e9dcc0"/><circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="3"/><g class="tally"></g></svg>
+    <span id="cnt">0 Stopps</span>
+    <a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a>
+  </div>
 
   <script id="data" type="application/json" is:inline set:html={JSON.stringify(data)}></script>
   <script>import '../scripts/app.js';</script>

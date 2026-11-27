@@ -1,6 +1,8 @@
 ---
 import '@fontsource-variable/manrope';
 import '../styles/global.css';
+import Bg from '../components/Bg.astro';
+import Logo from '../components/Logo.astro';
 const { title, description, path = '/' } = Astro.props;
 const url = 'https://thekenschaaf.de' + path;
 ---
@@ -12,19 +14,21 @@ const url = 'https://thekenschaaf.de' + path;
   <title>{title}</title>
   <meta name="description" content={description}>
   <link rel="canonical" href={url}>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:url" content={url}>
 </head>
 <body>
-  <header class="hero slim"><div class="in"><a class="back" href="/">thekenschaaf<span>.</span></a></div></header>
-  <main class="wrap">
+  <Bg />
+  <header class="top"><a class="brand" href="/"><Logo />thekenschaaf<span>.</span></a><nav><a href="/#karte">Karte</a><a href="/ueber/">Über</a><a href="/fuer-wen/">Für wen?</a></nav></header>
+  <main class="page">
     <article class="prose"><slot /></article>
-    <footer>
+    <footer class="foot">
       <p>Bitte trinke verantwortungsvoll. Infos und Öffnungszeiten ohne Gewähr.</p>
       <p><a href="/ueber/">Über thekenschaaf</a> · <a href="/fuer-wen/">Für wen?</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
-      <p class="pw">powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
+      <p>powered by <a href="https://suedel.media" rel="noopener">suedel.media</a></p>
     </footer>
   </main>
 </body>

@@ -22,12 +22,14 @@ $('#no').onclick = () => {
   $('#gb').hidden = true;
 };
 
+// Einblenden beim Scrollen
+const io = 'IntersectionObserver' in window
+  ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.2 })
+  : null;
+$$('.reveal').forEach(el => (io ? io.observe(el) : el.classList.add('in')));
+
 // Karte
-const map = new maplibregl.Map({
-  container: 'map',
-  style: STYLE,
-  center: CENTER, zoom: 14, attributionControl: { compact: true }
-});
+const map = new maplibregl.Map({ container: 'map', style: STYLE, center: CENTER, zoom: 13.5, attributionControl: { compact: true } });
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
 const GLASS = '<svg viewBox="-12 -30 24 42" width="28" height="48"><path class="beer" d="M-8-22h16l-1.5 30q0 3-3 3h-7q-3 0-3-3z"/><rect class="foam" x="-9" y="-27" width="18" height="8" rx="4"/></svg>';
@@ -36,7 +38,7 @@ const bounds = new maplibregl.LngLatBounds();
 let placed = 0;
 
 data.forEach(h => {
-  if (h.lat == null) return;
+  if (h.lat == null || h.lat < 50.8 || h.lat > 51.1 || h.lng < 6.8 || h.lng > 7.15) { if (h.lat != null) console.warn('Koordinaten außerhalb von Köln, übersprungen:', h.name); return; }
   const el = document.createElement('div');
   el.className = 'glass';
   el.tabIndex = 0;
@@ -44,21 +46,23 @@ data.forEach(h => {
   el.setAttribute('aria-label', h.name);
   el.innerHTML = '<span class="gi">' + GLASS + '</span><span class="bd"></span>';
   const open = () => popup.setLngLat([h.lng, h.lat]).setHTML(
-    '<b>' + h.name + '</b><br>' + (h.marke ? h.marke + '<br>' : '') +
-    '<button class="add pri" data-add="' + h.id + '">' + (tour.includes(h.id) ? 'Aus der Tour entfernen' : 'Zur Tour hinzufügen') + '</button>'
+    '<b>' + h.name + '</b>' + (h.marke ? '<br>' + h.marke : '') + '<br><button class="pri" data-add="' + h.id + '"></button>'
   ).addTo(map);
-  el.addEventListener('click', e => { e.stopPropagation(); open(); });
-  el.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
+  el.addEventListener('click', e => { e.stopPropagation(); open(); render(); });
+  el.addEventListener('keydown', e => { if (e.key === 'Enter') { open(); render(); } });
   h.el = el; h.gi = el.querySelector('.gi'); h.bd = el.querySelector('.bd');
   new maplibregl.Marker({ element: el, anchor: 'bottom' }).setLngLat([h.lng, h.lat]).addTo(map);
   bounds.extend([h.lng, h.lat]); placed++;
 });
-if (placed) map.fitBounds(bounds, { padding: 50, maxZoom: 15, duration: 0 });
+if (placed) {
+  const pad = Math.min(80, Math.round($('#map').clientHeight * 0.2));
+  map.fitBounds(bounds, { padding: { top: pad, bottom: pad, left: 60, right: 60 }, maxZoom: 15, duration: 0 });
+}
 else console.warn('Keine Koordinaten vorhanden. Bitte "npm run geocode" ausführen.');
 
 map.on('load', () => {
   map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
-  map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#e2001a', 'line-width': 4, 'line-dasharray': [2, 1.5] } });
+  map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#ff3b53', 'line-width': 4, 'line-dasharray': [2, 1.5] } });
   render();
 });
 
@@ -77,7 +81,7 @@ function mv(i, d) {
 }
 function clink(a, b) {
   const A = by[a], B = by[b];
-  if (A.lat == null || B.lat == null) return;
+  if (!A.el || !B.el) return;
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const d = B.lng >= A.lng ? 1 : -1;
     A.gi.style.transform = `rotate(${18 * d}deg)`;
@@ -123,7 +127,14 @@ function render() {
     h.el.classList.toggle('on', k > -1);
     h.bd.textContent = k + 1;
   });
-  $$('.item [data-add]').forEach(b => { b.textContent = tour.includes(b.dataset.add) ? 'Aus der Tour entfernen' : 'Zur Tour hinzufügen'; });
+  $$('[data-add]').forEach(b => {
+    const on = tour.includes(b.dataset.add);
+    if (b.classList.contains('plus')) {
+      b.classList.toggle('on', on);
+      b.textContent = on ? '✓' : '+';
+      b.setAttribute('aria-label', (on ? 'Aus der Tour entfernen: ' : 'Zur Tour hinzufügen: ') + by[b.dataset.add].name);
+    } else b.textContent = on ? 'Aus der Tour entfernen' : 'Zur Tour hinzufügen';
+  });
   $('#empty').hidden = tour.length > 0;
   $('#tl').innerHTML = tour.map((id, i) =>
     '<li><span class="n">' + (i + 1) + '</span><b>' + by[id].name + '</b>' +
@@ -132,8 +143,9 @@ function render() {
     '<button class="ic" data-r="' + id + '" aria-label="Entfernen">✕</button></li>').join('');
   let src = null;
   try { src = map.getSource('route'); } catch {}
-  if (src) src.setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: tour.map(id => by[id]).filter(h => h.lat != null).map(h => [h.lng, h.lat]) } });
+  if (src) src.setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: tour.map(id => by[id]).filter(h => h.el).map(h => [h.lng, h.lat]) } });
   $('#cnt').textContent = tour.length + (tour.length === 1 ? ' Stopp' : ' Stopps');
+  $('#bar').hidden = tour.length === 0;
   drawTally(tour.length);
   const links = [$('#go'), $('#go2')];
   if (tour.length > 1) {
@@ -151,6 +163,12 @@ function applyFilter() {
   $$('.item').forEach(i => { i.hidden = !(filter === 'all' || i.dataset.kat === filter); });
   data.forEach(h => { if (h.el) h.el.style.display = (filter === 'all' || h.kat === filter) ? '' : 'none'; });
 }
+
+$$('.expand').forEach(b => b.addEventListener('click', () => {
+  const open = b.getAttribute('aria-expanded') === 'true';
+  b.setAttribute('aria-expanded', String(!open));
+  b.closest('.item').querySelector('.det').hidden = open;
+}));
 
 document.addEventListener('click', e => {
   const b = e.target.closest('button');
