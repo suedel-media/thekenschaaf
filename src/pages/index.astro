@@ -3,7 +3,9 @@ import '@fontsource-variable/manrope';
 import '../styles/global.css';
 import Bg from '../components/Bg.astro';
 import Logo from '../components/Logo.astro';
-import data from '../data/brauhaeuser.json';
+import base from '../data/brauhaeuser.json';
+import infos from '../data/infos.json';
+const data = base.map(h => ({ ...h, ...(infos[h.id] || {}) }));
 ---
 <!doctype html>
 <html lang="de">
@@ -86,7 +88,7 @@ import data from '../data/brauhaeuser.json';
             </div>
             <div class="det" hidden>
               <p>{h.info}</p>
-              <p>{h.adresse}, Köln<br>{h.zeiten ?? 'Öffnungszeiten werden noch geprüft.'}</p>
+              <p>{h.adresse}, Köln<br>{h.zeiten ?? (h.web ? 'Aktuelle Öffnungszeiten stehen auf der Website des Hauses.' : 'Öffnungszeiten werden noch geprüft.')}</p>
               {h.web && <p><a href={h.web} rel="noopener" target="_blank">Website</a></p>}
             </div>
           </div>
@@ -105,7 +107,7 @@ import data from '../data/brauhaeuser.json';
   <div class="bar" id="bar" hidden>
     <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#e9dcc0"/><circle cx="100" cy="100" r="84" fill="none" stroke="#c9b88f" stroke-width="3"/><g class="tally"></g></svg>
     <span id="cnt">0 Stopps</span>
-    <a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route in Google Maps</a>
+    <a class="btn pri" id="go2" target="_blank" rel="noopener" aria-disabled="true">Route<span class="long"> in Google Maps</span></a>
   </div>
 
   <script id="data" type="application/json" is:inline set:html={JSON.stringify(data)}></script>

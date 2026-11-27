@@ -29,7 +29,12 @@ const io = 'IntersectionObserver' in window
 $$('.reveal').forEach(el => (io ? io.observe(el) : el.classList.add('in')));
 
 // Karte
-const map = new maplibregl.Map({ container: 'map', style: STYLE, center: CENTER, zoom: 13.5, attributionControl: { compact: true } });
+// Zum Testen: ?stil=osm (einfache OSM-Kacheln), ?stil=liberty|bright|positron|dark, ?debug=1 (zeigt Messwerte)
+const params = new URLSearchParams(location.search);
+const stil = params.get('stil');
+const OSM = { version: 8, sources: { o: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19, attribution: '© OpenStreetMap-Mitwirkende' } }, layers: [{ id: 'o', type: 'raster', source: 'o' }] };
+const mapStyle = stil === 'osm' ? OSM : ['liberty', 'bright', 'positron', 'dark', 'fiord'].includes(stil) ? 'https://tiles.openfreemap.org/styles/' + stil : STYLE;
+const map = new maplibregl.Map({ container: 'map', style: mapStyle, center: CENTER, zoom: 13.5, attributionControl: { compact: true } });
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 map.on('error', e => {
   const m = (e && e.error && e.error.message) || String(e);
@@ -40,7 +45,7 @@ map.on('error', e => {
   el.textContent = 'Kartenhinweis: ' + m.slice(0, 160);
 });
 
-const GLASS = '<svg viewBox="-12 -30 24 42" width="28" height="48"><path class="beer" d="M-8-22h16l-1.5 30q0 3-3 3h-7q-3 0-3-3z"/><rect class="foam" x="-9" y="-27" width="18" height="8" rx="4"/></svg>';
+const GLASS = '<svg viewBox="18 7 28 52" width="28" height="52"><path class="beer" d="M20 18h24v34q0 5-5 5H25q-5 0-5-5z"/><rect class="shine" x="23" y="25" width="2.6" height="26" rx="1.3"/><path class="foam" d="M20 16q0-7 7-7h10q7 0 7 7v8q-6 4-12 0-6 4-12 0z"/></svg>';
 const popup = new maplibregl.Popup({ offset: [0, -52], closeButton: false, maxWidth: '240px' });
 const bounds = new maplibregl.LngLatBounds();
 let placed = 0;
@@ -68,6 +73,16 @@ if (placed) {
 }
 else console.warn('Keine Koordinaten vorhanden. Bitte "npm run geocode" ausführen.');
 
+if (params.has('debug')) {
+  const info = () => {
+    const c = map.getContainer(), el = $('#maperr');
+    el.hidden = false;
+    el.textContent = 'Debug: Karte ' + c.clientWidth + '×' + c.clientHeight + ' px, Zoom ' + map.getZoom().toFixed(1) +
+      ', Marker ' + placed + '/' + data.length + ', Daten mit Koordinaten ' + data.filter(h => h.lat != null).length +
+      ', Stil geladen ' + map.isStyleLoaded() + ', Kacheln geladen ' + map.areTilesLoaded();
+  };
+  map.on('idle', info); map.on('moveend', info); map.on('error', () => setTimeout(info, 200)); info();
+}
 map.on('load', () => {
   map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
   map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#ff3b53', 'line-width': 4, 'line-dasharray': [2, 1.5] } });

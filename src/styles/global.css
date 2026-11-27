@@ -41,7 +41,7 @@ button:focus-visible,.btn:focus-visible,.glass:focus-visible{outline:2px solid v
 .hero{min-height:92vh;display:flex;align-items:center;padding:110px 18px 60px}
 .heroin{max-width:1180px;margin:0 auto;width:100%;animation:fadeup .9s ease-out both}
 .eyebrow{font-weight:800;color:var(--rot2);margin:0 0 14px}
-.hero h1{font-size:clamp(2.9rem,10vw,7rem);line-height:.98;font-weight:800;max-width:12ch}
+.hero h1{font-size:clamp(1.9rem,8vw,7rem);line-height:1;font-weight:800;max-width:12ch;hyphens:auto;overflow-wrap:break-word}
 .sub{max-width:46ch;color:#cfc6d6;font-size:clamp(1.05rem,2.4vw,1.35rem);margin:22px 0 28px}
 @keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 /* Schritte */
@@ -68,14 +68,15 @@ button:focus-visible,.btn:focus-visible,.glass:focus-visible{outline:2px solid v
 .maplibregl-popup-content button{margin-top:8px}
 .maplibregl-popup-anchor-bottom .maplibregl-popup-tip{border-top-color:#21182a}
 /* Gläser */
-.glass{width:28px;height:48px;cursor:pointer}
+.glass{width:28px;height:52px;cursor:pointer}
 .glass::after{content:"";position:absolute;inset:-8px}
 .gi{display:block;transform-origin:50% 100%;transition:transform .25s}
 .glass svg{filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
-.glass .beer{fill:#ffcf70;stroke:#5a3d0a;stroke-width:1.3}
+.glass .beer{fill:#d9a441}
+.glass .shine{fill:#fff;opacity:.3}
 .glass .foam{fill:#fff6e8}
 .glass.on svg{filter:drop-shadow(0 0 9px rgba(255,182,39,.95))}
-.glass.on .beer{fill:#ff9f00}
+.glass.on .beer{fill:#ffb627}
 .bd{position:absolute;top:-6px;right:-10px;background:var(--rot);color:#fff;border:2px solid #fff;border-radius:50%;width:22px;height:22px;font-size:.72rem;font-weight:800;display:none;place-items:center}
 .glass.on .bd{display:grid}
 .prost span{display:inline-block;background:var(--rot);color:#fff;border-radius:999px;padding:3px 14px;font-weight:800;box-shadow:0 0 18px rgba(226,0,26,.7);animation:up 1.2s ease-out forwards;pointer-events:none}
@@ -135,3 +136,23 @@ button:focus-visible,.btn:focus-visible,.glass:focus-visible{outline:2px solid v
 #gate p{color:var(--dim)}
 #gate .row{justify-content:center}
 @media(prefers-reduced-motion:reduce){.rise{display:none}html{scroll-behavior:auto}.heroin{animation:none}.reveal{opacity:1;transform:none;transition:none}.gi{transition:none}.strich.neu{animation:none;stroke-dashoffset:0}.prost span{animation:none}}
+/* Handy */
+html,body{overflow-x:clip}
+@media(max-width:600px){
+ .wrap{padding:0 14px}
+ .top{padding-left:14px;padding-right:14px}
+ .hero{padding:96px 14px 40px;min-height:84vh}
+ .steps{padding:20px 14px 60px}
+ .chips{left:12px;right:70px}
+ .chips button{min-height:38px;padding:6px 14px;font-size:.88rem}
+ .tourcard,.listcol{flex:1 1 100%}
+ .tourcard{padding:18px}
+ .det{padding-left:8px}
+ .bar{max-width:calc(100vw - 20px);gap:8px;padding:6px 6px 6px 10px}
+ .bar .btn{padding:8px 14px;font-size:.9rem}
+ .bar .long{display:none}
+}
+/* Überlaufen verhindern */
+.hero>*,.heroin>*{min-width:0}
+.heroin{min-width:0}
+.hero h1{overflow-wrap:anywhere}
