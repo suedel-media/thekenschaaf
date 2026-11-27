@@ -55,7 +55,7 @@ button:focus-visible,.btn:focus-visible,.glass:focus-visible{outline:2px solid v
 /* Karte, bildschirmbreit ohne Rahmen */
 .mapfull{position:relative;width:100%;height:min(50vh,520px);min-height:340px}
 #map{position:absolute;inset:0}
-#map .maplibregl-canvas-container{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%)}
+#map .maplibregl-canvas-container{height:100%;width:100%;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%)}
 .maperr{position:absolute;left:18px;bottom:16px;z-index:5;max-width:60ch;font-size:.85rem;color:var(--dim)}
 .chips{position:absolute;z-index:5;top:52px;left:18px}
 .maplibregl-ctrl-top-right{margin-top:52px}
